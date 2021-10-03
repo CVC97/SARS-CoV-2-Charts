@@ -1,9 +1,8 @@
-from bokeh.models.sources import ColumnDataSource
 import pandas as pd
 import holoviews as hv
 hv.extension('bokeh')
 from bokeh.plotting import figure, show
-from bokeh.models import Range1d, LinearAxis
+from bokeh.models import Range1d, LinearAxis, ColumnDataSource
 from bokeh.models.tools import HoverTool
 
 
@@ -49,6 +48,7 @@ COV_data_source = ColumnDataSource(data=dict(
     time_deaths_rep = deaths_rep_data['date'],
 ))
 
+
 #Hovertools
 hover_cases_spec = HoverTool(names = ['cases by specimen date: 7-Day moving average'],
     tooltips = [
@@ -85,33 +85,39 @@ hover_deaths_rep = HoverTool(names = ['deaths by report date: 7-Day moving avera
     ], formatters={'@time_deaths_rep': 'datetime'}
 )
 
-diggawhat = cases_rep_data['date'].loc[0]
-#diggawhat2 = diggawhat[:diggawhat.find(' ')]
-print(diggawhat)
+
+#timestamp
+timestamp = cases_rep_data['date'].loc[0]
+print(timestamp)
+
 
 #figure
 p = figure(
-    title = f'SARS-CoV-2: United Kingdom ({diggawhat})', 
+    title = f'SARS-CoV-2: United Kingdom ({timestamp})', 
     plot_width = 1200, 
     plot_height = 600, 
     x_axis_type='datetime',
 )
 
 
-#LHS y-axis
+#LHS y-axis cases
 p.yaxis.axis_label = 'number of cases per capita'
-p.y_range = Range1d(start=-0.05 * max(cases_spec_data['newCasesBySpecimenDate']) / GB_pop, end=1.05 * max(cases_spec_data['newCasesBySpecimenDate']) / GB_pop)
+case_start = -0.05 * max(cases_spec_data['newCasesBySpecimenDate']) / GB_pop
+case_end = 1.05 * max(cases_spec_data['newCasesBySpecimenDate']) / GB_pop
+p.y_range = Range1d(start = case_start, end = case_end)
 
 #RHS y-axis hosps
 rfactor = max(cases_spec_data['newCasesBySpecimenDate'])* max(data_to_7D(hosp_adm_data['newAdmissions'])) / max(data_to_7D(cases_spec_data['newCasesBySpecimenDate']))
-
-p.extra_y_ranges['rhosp'] = Range1d(start=-0.05 * rfactor / GB_pop, end=1.05 * rfactor / GB_pop)
+hosp_start = -0.05 * rfactor / GB_pop
+hosp_end = 1.05 * rfactor / GB_pop
+p.extra_y_ranges['rhosp'] = Range1d(start = hosp_start, end = hosp_end)
 p.add_layout(LinearAxis(y_range_name='rhosp', axis_label='number of hospital admissions per capita'), 'right')
 
-#deaths
+#RHS y-axis 2 deaths
 rfactor2 = max(cases_spec_data['newCasesBySpecimenDate'])* max(data_to_7D(deaths_dd_data['newDeaths28DaysByDeathDate'])) / max(data_to_7D(cases_spec_data['newCasesBySpecimenDate']))
-
-p.extra_y_ranges['rdeath'] = Range1d(start=-0.05 * rfactor2 / GB_pop, end=1.05 * rfactor2 / GB_pop)
+death_start = -0.05 * rfactor2 / GB_pop
+death_end = 1.05 * rfactor2 / GB_pop
+p.extra_y_ranges['rdeath'] = Range1d(start = death_start, end = death_end)
 p.add_layout(LinearAxis(y_range_name='rdeath', axis_label='number of deaths (within 28 days of positive test) per capita'), 'right')
 
 
@@ -170,6 +176,7 @@ p.line(
     name = 'hospital admissions: 7-Day moving average',
 )
 
+
 #deaths by date of death
 p.line(
     x = deaths_dd_data['date'], y = deaths_dd_data['newDeaths28DaysByDeathDate'] / GB_pop,
@@ -211,11 +218,12 @@ p.line(
 
 
 #axis formatting
-# #p.title.text_font = 'Computer Modern Roman'
+##p.title.text_font = 'Computer Modern Roman'
 #p.axis.axis_label_text_font = 'Computer Modern Roman'
 #p.axis.axis_label_text_font_size = '16px'
 #p.axis.axis_label_text_font_style = 'normal'
 #p.axis.major_label_text_font = 'Computer Modern Roman'
+
 
 #adding hovertools
 p.add_tools(hover_cases_spec)
@@ -223,6 +231,5 @@ p.add_tools(hover_cases_rep)
 p.add_tools(hover_hosp_adm)
 p.add_tools(hover_deaths_dd)
 p.add_tools(hover_deaths_rep)
-
 
 show(p)
