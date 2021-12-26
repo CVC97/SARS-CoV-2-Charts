@@ -107,14 +107,14 @@ case_end = 1.05 * max(cases_spec_data['newCasesBySpecimenDate']) / GB_pop
 p.y_range = Range1d(start = case_start, end = case_end)
 
 #RHS y-axis hosps
-rfactor = max(cases_spec_data['newCasesBySpecimenDate'])* max(data_to_7D(hosp_adm_data['newAdmissions'])) / max(data_to_7D(cases_spec_data['newCasesBySpecimenDate']))
+rfactor = max(cases_spec_data['newCasesBySpecimenDate'])* max(data_to_7D(hosp_adm_data['newAdmissions'])) / 918.3924552566713
 hosp_start = -0.05 * rfactor / GB_pop
 hosp_end = 1.05 * rfactor / GB_pop
 p.extra_y_ranges['rhosp'] = Range1d(start = hosp_start, end = hosp_end)
 p.add_layout(LinearAxis(y_range_name='rhosp', axis_label='number of hospital admissions per capita'), 'right')
 
 #RHS y-axis 2 deaths
-rfactor2 = max(cases_spec_data['newCasesBySpecimenDate'])* max(data_to_7D(deaths_dd_data['newDeaths28DaysByDeathDate'])) / max(data_to_7D(cases_spec_data['newCasesBySpecimenDate']))
+rfactor2 = max(cases_spec_data['newCasesBySpecimenDate'])* max(data_to_7D(deaths_dd_data['newDeaths28DaysByDeathDate'])) / 918.3924552566713
 death_start = -0.05 * rfactor2 / GB_pop
 death_end = 1.05 * rfactor2 / GB_pop
 p.extra_y_ranges['rdeath'] = Range1d(start = death_start, end = death_end)
@@ -232,4 +232,5 @@ p.add_tools(hover_hosp_adm)
 p.add_tools(hover_deaths_dd)
 p.add_tools(hover_deaths_rep)
 
+p.legend.location = 'top_left'
 show(p)
