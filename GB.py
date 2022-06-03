@@ -13,11 +13,21 @@ url_hosp_adm = 'https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=ove
 url_deaths_dd = 'https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newDeaths28DaysByDeathDate%22:%22newDeaths28DaysByDeathDate%22,%22cumDeaths28DaysByDeathDate%22:%22cumDeaths28DaysByDeathDate%22%7D&format=csv'
 url_deaths_rep = 'https://coronavirus.data.gov.uk/api/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newDeaths28DaysByPublishDate%22:%22newDeaths28DaysByPublishDate%22,%22cumDeaths28DaysByPublishDate%22:%22cumDeaths28DaysByPublishDate%22%7D&format=csv'
 
-cases_spec_data = pd.read_csv(url_cases_spec, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
-cases_rep_data = pd.read_csv(url_cases_rep, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
-hosp_adm_data = pd.read_csv(url_hosp_adm, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
-deaths_dd_data = pd.read_csv(url_deaths_dd, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
-deaths_rep_data = pd.read_csv(url_deaths_rep, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
+
+#initializing columns
+cases_spec_data_pre = pd.read_csv(url_cases_spec, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
+cases_rep_data_pre = pd.read_csv(url_cases_rep, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
+hosp_adm_data_pre = pd.read_csv(url_hosp_adm, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
+deaths_dd_data_pre = pd.read_csv(url_deaths_dd, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
+deaths_rep_data_pre = pd.read_csv(url_deaths_rep, sep=',', header=0, skipinitialspace=True, usecols=[3,4], parse_dates=['date'])
+
+
+#cleaning the NaNs
+cases_spec_data = cases_spec_data_pre.fillna(0)
+cases_rep_data = cases_rep_data_pre.fillna(0)
+hosp_adm_data = hosp_adm_data_pre.fillna(0)
+deaths_dd_data = deaths_dd_data_pre.fillna(0)
+deaths_rep_data = deaths_rep_data_pre.fillna(0)
 
 GB_pop = 66.65 #Millionen
 
