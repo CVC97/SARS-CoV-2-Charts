@@ -1,7 +1,7 @@
 import pandas as pd
 import holoviews as hv
 hv.extension('bokeh')
-from bokeh.plotting import figure, show
+from bokeh.plotting import figure, show, output_file
 from bokeh.models import Range1d, LinearAxis, ColumnDataSource
 from bokeh.models.tools import HoverTool
 
@@ -60,35 +60,35 @@ COV_data_source = ColumnDataSource(data=dict(
 
 
 #Hovertools
-hover_cases_spec = HoverTool(names = ['cases by specimen date: 7-Day moving average'],
+hover_cases_spec = HoverTool(name = 'cases by specimen date: 7-Day moving average',
     tooltips = [
         ('cases (specimen date)', '@cases_spec_7Dma{0,000}'),
         ('date (7-Day moving average)', '@time_cases_spec{%F}')
     ], formatters={'@time_cases_spec': 'datetime'}
 )
 
-hover_cases_rep = HoverTool(names = ['cases by report date: 7-Day moving average'],
+hover_cases_rep = HoverTool(name = 'cases by report date: 7-Day moving average',
     tooltips = [
         ('cases (report date)', '@cases_rep_7Dma{0,000}'),
         ('date (7-Day moving average)', '@time_cases_rep{%F}')
     ], formatters={'@time_cases_rep': 'datetime'}
 )
 
-hover_hosp_adm = HoverTool(names = ['hospital admissions: 7-Day moving average'],
+hover_hosp_adm = HoverTool(name = 'hospital admissions: 7-Day moving average',
     tooltips = [
         ('hospital admissions', '@hosp_adm_7Dma{0.0}'),
         ('date (7-Day moving average)', '@time_hosp_adm{%F}')
     ], formatters={'@time_hosp_adm': 'datetime'}
 )
 
-hover_deaths_dd = HoverTool(names = ['deaths by date of death: 7-Day moving average'],
+hover_deaths_dd = HoverTool(name = 'deaths by date of death: 7-Day moving average',
     tooltips = [
         ('deaths (date of death)', '@deaths_dd_7Dma{0.00}'),
         ('date (7-Day moving average)', '@time_deaths_dd{%F}')
     ], formatters={'@time_deaths_dd': 'datetime'}
 )
 
-hover_deaths_rep = HoverTool(names = ['deaths by report date: 7-Day moving average'],
+hover_deaths_rep = HoverTool(name = 'deaths by report date: 7-Day moving average',
     tooltips = [
         ('deaths (report date)', '@deaths_rep_7Dma{0.00}'),
         ('date (7-Day moving average)', '@time_deaths_rep{%F}')
@@ -104,8 +104,8 @@ print(timestamp)
 #figure
 p = figure(
     title = f'SARS-CoV-2: United Kingdom ({timestamp})', 
-    plot_width = 1200, 
-    plot_height = 600, 
+    width = 1200, 
+    height = 600, 
     x_axis_type='datetime',
 )
 
@@ -250,4 +250,5 @@ p.ygrid.minor_grid_line_alpha = 0.05
 #p.xgrid.minor_grid_line_alpha = 0.05
 
 p.legend.location = 'top_left'
+output_file(filename = "index.html")  
 show(p)
